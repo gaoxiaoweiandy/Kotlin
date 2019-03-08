@@ -21,8 +21,22 @@ class MainActivity : AppCompatActivity() {
         cases(0L)
         cases(MainActivity())
         cases("hello")
+
+        //解构
+        val pair = Pair("gxw","gaoxiaowei");
+        var (key,value) = pair;
+        Log.i(TAG,"the key of Pair is$key,value is $value");
+
+        //数据类
+        var user = User("gaoxiaowei",30);
+        val toString  = user.toString();
+        var(name,age) = user;
+        Log.i(TAG,"the name of user is$name,age is $age, toString=$toString");
+
     }
 
+    //数据类，所有属性在主构造方法中声明，内部会自动生产toString,equal,hashcode,copy等方法。
+    data class User(var name:String,var age:Int);
     //when多条件选择的用法，类似于switch
     private fun cases(obj: Any) {
         when (obj) {
@@ -110,6 +124,20 @@ class MainActivity : AppCompatActivity() {
         else
         {
             Log.i(TAG,"index is out");
+        }
+    }
+
+    //解构:把一个类的各属性的值抽取出来赋给你声明的变量
+    class Pair<K,V>(val key:K,val value:V)
+    {
+        operator fun  component1():K
+        {
+            return key;
+        }
+
+        operator fun  component2():V
+        {
+            return value;
         }
     }
 }
