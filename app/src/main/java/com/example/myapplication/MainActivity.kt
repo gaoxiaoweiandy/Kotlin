@@ -22,9 +22,9 @@ class MainActivity : AppCompatActivity() {
         cases(MainActivity())
         cases("hello")
 
-        //解构
+        /*gxw+s解构*/
         val pair = Pair("gxw","gaoxiaowei");
-        var (key,value) = pair;
+        var (key,value) = pair; //解构
         Log.i(TAG,"the key of Pair is$key,value is $value");
 
         //数据类
@@ -33,6 +33,40 @@ class MainActivity : AppCompatActivity() {
         var(name,age) = user;
         Log.i(TAG,"the name of user is$name,age is $age, toString=$toString");
 
+        //遍历MAP
+        travelMap();
+        /*gxw+e解构*/
+
+        dataClass();
+    }
+
+    /**
+     * 使用data class类默认生成的方法
+     */
+    fun dataClass()
+    {
+        var user = User("gaoxiaowei",30);
+        var secondUser = User("liushuai",31);
+        var thirdUser = User("maguorong",32);
+        Log.i(TAG,"user:"+user+", secondUser="+secondUser+",thirdUser="+thirdUser);
+        Log.i(TAG,"usercopy="+user.copy(age=31));
+        Log.i(TAG,"usercopy2="+user.copy(name="liushuai"));
+        Log.i(TAG,"usercopy3="+user.copy("gxw",33));
+    }
+
+
+    //遍历hashmap
+    fun travelMap()
+    {
+        var myMap = hashMapOf<String,String>();
+        myMap.put("gxw","gaoxiaowei");
+        myMap.put("ls","liushuai");
+        myMap.put("mgr","maguorong");
+
+        for((key,value) in myMap)
+        {
+            Log.i(TAG,"key="+key+",value="+value);
+        }
     }
 
     //数据类，所有属性在主构造方法中声明，内部会自动生产toString,equal,hashcode,copy等方法。
