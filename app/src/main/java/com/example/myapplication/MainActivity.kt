@@ -2,6 +2,8 @@ package com.example.myapplication
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import kotlin.reflect.KProperty
+
 class MainActivity : AppCompatActivity() {
     companion object {
         var TAG = "MainActivity";
@@ -32,12 +34,52 @@ class MainActivity : AppCompatActivity() {
         val toString  = user.toString();
         var(name,age) = user;
         Log.i(TAG,"the name of user is$name,age is $age, toString=$toString");
+        dataClass();
 
         //遍历MAP
         travelMap();
         /*gxw+e解构*/
 
-        dataClass();
+        /*gxw+s for 委托*/
+        var example = Example("rinima");
+        Log.i(TAG,"example.property="+ example.myProperty);
+        example.myProperty = "hgf";
+
+        //懒加载:只计算1次（只输出compute1次），第二次直接加载上次缓存的结果
+        var lazyLoad = lazyLoad();
+        Log.i(TAG,"lazy=${lazyLoad.lazy}");
+        Log.i(TAG,"lazy=${lazyLoad.lazy}");
+        /*gxw+e for 委托*/
+    }
+
+
+    /**
+     * 懒加载，当第一次计算后输出computed!,  mylzy,第二次再读取的时候，直接读取上次返回的结果（已经缓存），
+     * 无需再计算，即无需再输出computed!
+     */
+    class lazyLoad
+    {
+        val lazy: String by lazy {
+            Log.i(TAG,"computed!")
+            "my lazy"
+        }
+    }
+
+    //委托
+     class Example(var property1: String)
+    {
+        var myProperty:String by MyDelegate();
+    }
+
+    class MyDelegate
+    {
+        operator fun getValue(example: MainActivity.Example, property: KProperty<*>): String {
+            return "hello $example,thank you delegate your property ${property.name} to me";
+
+        }
+        operator fun setValue(example: Any?, property: KProperty<*>, value: String) {
+            Log.i(TAG,"$value has been assigned to ${property.name} in $example ")
+        }
     }
 
     /**
@@ -175,3 +217,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+
