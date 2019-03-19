@@ -2,6 +2,7 @@ package com.example.myapplication
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
 class MainActivity : AppCompatActivity() {
@@ -11,7 +12,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var len = getStringLength("GAOXIAOWEI");
+/*        var len = getStringLength("GAOXIAOWEI");
         Log.e(TAG,"strLen="+len);
         var strArray:Array<String> = arrayOf("hgf","rnm");
        //gxw-  printWhileArray(strArray);
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         cases(MainActivity())
         cases("hello")
 
-        /*gxw+s解构*/
+        *//*gxw+s解构*//*
         val pair = Pair("gxw","gaoxiaowei");
         var (key,value) = pair; //解构
         Log.i(TAG,"the key of Pair is$key,value is $value");
@@ -38,9 +39,9 @@ class MainActivity : AppCompatActivity() {
 
         //遍历MAP
         travelMap();
-        /*gxw+e解构*/
+        *//*gxw+e解构*//*
 
-        /*gxw+s for 委托*/
+        *//*gxw+s for 委托*//*
         var example = Example("rinima");
         Log.i(TAG,"example.property="+ example.myProperty);
         example.myProperty = "hgf";
@@ -49,7 +50,117 @@ class MainActivity : AppCompatActivity() {
         var lazyLoad = lazyLoad();
         Log.i(TAG,"lazy=${lazyLoad.lazy}");
         Log.i(TAG,"lazy=${lazyLoad.lazy}");
+
+
+        //观察者，观察属性的变化
+        val user2 = User2();
+        user2.name = "Carl";
+        user2.name = "Car2";*/
+
+
+        //委托来处理属性在未初始化的情形：自动抛出异常
+/*        val user3 = User3();
+        user3.init("gaoxiaowei");
+        val userName = user3.name;
+        Log.i(TAG,"$userName");*/
+
+        //使用MAP给属性赋值
+       /* val userMap = UserMap(mapOf("name" to "gaoxiaowei","age" to 35));
+        val uN = userMap.name;
+        val age = userMap.age;
+        Log.i(TAG,"the name of user is $uN,age is $age");*/
         /*gxw+e for 委托*/
+
+        /*gxw+s Callable References*/
+/*        val list = listOf(1,2,3);
+       var listInt = list.filter(::isOdd);
+
+        Log.i(TAG,""+listInt);*/
+
+/*
+        var oddLength = compose(::isOdd,::length);
+        var strings = listOf("a","ab","abc");
+        Log.i(TAG,""+(strings.filter(oddLength)));
+        */
+/*gxw+e*//*
+
+
+        //TEST
+        var intArray = intArrayOf(1,4,3);
+        var sum = sum(intArray);
+        Log.i(TAG,"sum=$sum");
+*/
+        var intArray = intArrayOf(1,4,3);
+        val max = indexOfMax(intArray);
+        Log.i(TAG,"max=$max");
+    }
+
+
+    /*
+ * Your task is to implement the indexOfMax() function so that it returns
+ * the index of the largest element in the array, or null if the array is empty.
+ */
+
+
+    fun indexOfMax(a: IntArray): Int? {
+        if(a == null)
+        {
+            return null;
+        }
+        return a.max();
+    }
+
+
+    /**\
+     * 求和题目1
+     */
+    fun sum(a: IntArray): Int {
+        // Write your solution here
+        var sum = 0;
+        for( value in a)
+        {
+            sum+=value;
+        }
+        return sum
+    }
+
+
+    fun <A, B, C> compose(f: (B) -> C, g: (A) -> B): (A) -> C {
+        return { x -> f(g(x)) }
+    }
+
+
+
+
+    fun length(s:String) = s.length;
+    fun  isOdd(x:Int) = (x%2) !=0;
+
+
+    class UserMap(var map:Map<String,Any?>)
+    {
+        val name:String by map;
+        val age:Int by map;
+    }
+    /**
+     * 委托来处理属性在未初始化的情形：自动抛出异常
+     */
+    class User3
+    {
+        var name:String by Delegates.notNull();
+        fun init ( name:String){
+           this. name = name;
+        }
+    }
+
+    /**
+     * observable有2个参数，第一个是初始值，第二个是属性变化时的handler
+     * 观察者模式：当属性值变化时，响应handler，handler有3个参数：改变的属性，old值，new值
+     */
+    class User2 {
+        var name: String by Delegates.observable("no name") {
+                d, old, new ->
+            Log.i(TAG,"$old - $new")
+        }
     }
 
 
